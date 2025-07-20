@@ -1,3 +1,5 @@
+"""Financial calculation utilities for the backend API."""
+
 from typing import Mapping, Any, Dict
 import numpy as np
 
