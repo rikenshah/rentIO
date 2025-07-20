@@ -253,25 +253,35 @@ const KPISummary: React.FC<KPISummaryProps> = ({ results, llmResponse, formData 
       ],
       icon: <MoneyIcon />,
       getActualCalculation: (results, formData) => {
-        const discountRate = 0.10; // 10% discount rate
+        // Use backend-calculated values for perfect sync
+        const discountRate = formData.stock_return_rate / 100;
         const cashFlow = results.CashFlow;
         const years = formData.years;
-        let npv = -formData.down_payment; // Initial investment (negative)
-        
-        // Add discounted cash flows
-        for (let year = 1; year <= years; year++) {
-          npv += cashFlow / Math.pow(1 + discountRate, year);
+        const purchasePrice = formData.purchase_price;
+        const appreciationRate = formData.appreciation_rate / 100;
+        const loanAmount = formData.loan_amount;
+        const monthlyRate = formData.interest_rate / 100 / 12;
+        const n_payments = formData.loan_years * 12;
+        const months_paid = years * 12;
+        const futureValue = purchasePrice * Math.pow(1 + appreciationRate, years);
+        let remainingBalance;
+        if (monthlyRate > 0) {
+          remainingBalance = loanAmount * (Math.pow(1 + monthlyRate, n_payments) - Math.pow(1 + monthlyRate, months_paid)) / (Math.pow(1 + monthlyRate, n_payments) - 1);
+        } else {
+          remainingBalance = loanAmount - (loanAmount / n_payments) * months_paid;
         }
-        
+        const equityFromSale = futureValue - remainingBalance;
+        // Use backend NPV for final result and all step values
         return {
           steps: [
             `Initial Investment = -${formatCurrency(formData.down_payment)}`,
             `Annual Cash Flow = ${formatCurrency(cashFlow)}`,
             `Discount Rate = ${(discountRate * 100).toFixed(1)}%`,
-            `NPV = -${formatCurrency(formData.down_payment)} + ${formatCurrency(cashFlow)}/(1.1) + ${formatCurrency(cashFlow)}/(1.1)² + ... + ${formatCurrency(cashFlow)}/(1.1)^${years}`,
-            `NPV = ${formatCurrency(npv)}`
+            `Equity from Sale (Year ${years}) = ${formatCurrency(futureValue)} - ${formatCurrency(remainingBalance)} = ${formatCurrency(equityFromSale)}`,
+            `NPV = (calculated by backend, including all discounted cash flows and sale)`,
+            `NPV = ${formatCurrency(results.NPV)}`
           ],
-          finalValue: formatCurrency(npv)
+          finalValue: formatCurrency(results.NPV)
         };
       }
     },
@@ -567,32 +577,12 @@ const KPISummary: React.FC<KPISummaryProps> = ({ results, llmResponse, formData 
                 </AccordionDetails>
               </Accordion>
 
-              <Accordion defaultExpanded>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <CalculateIcon sx={{ mr: 1, color: 'primary.main' }} />
-                  <Typography variant="h6">Calculation Steps</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <List dense>
-                    {metricInfo[openDialog].calculation.map((step, index) => (
-                      <ListItem key={index}>
-                        <ListItemIcon>
-                          <Typography variant="body2" color="primary" sx={{ fontWeight: 'bold' }}>
-                            {index + 1}.
-                          </Typography>
-                        </ListItemIcon>
-                        <ListItemText primary={step} />
-                      </ListItem>
-                    ))}
-                  </List>
-                </AccordionDetails>
-              </Accordion>
-
+              {/* Your Calculation FIRST */}
               {formData && metricInfo[openDialog].getActualCalculation && (
                 <Accordion defaultExpanded>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <CalculateIcon sx={{ mr: 1, color: 'success.main' }} />
-                    <Typography variant="h6">Your Calculation</Typography>
+                    <Typography variant="h6">Your Calculation (with actual values)</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Box sx={{ mb: 2 }}>
@@ -615,6 +605,28 @@ const KPISummary: React.FC<KPISummaryProps> = ({ results, llmResponse, formData 
                   </AccordionDetails>
                 </Accordion>
               )}
+
+              {/* General Formula SECOND, collapsed by default */}
+              <Accordion defaultExpanded={false}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <CalculateIcon sx={{ mr: 1, color: 'primary.main' }} />
+                  <Typography variant="h6">General Formula</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <List dense>
+                    {metricInfo[openDialog].calculation.map((step, index) => (
+                      <ListItem key={index}>
+                        <ListItemIcon>
+                          <Typography variant="body2" color="primary" sx={{ fontWeight: 'bold' }}>
+                            {index + 1}.
+                          </Typography>
+                        </ListItemIcon>
+                        <ListItemText primary={step} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </AccordionDetails>
+              </Accordion>
 
               <Accordion defaultExpanded>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
