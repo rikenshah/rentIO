@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Paper,
   Typography,
@@ -20,32 +20,19 @@ import {
 } from '@mui/icons-material';
 
 interface ScenarioFormProps {
+  formData: any;
+  onFormDataChange: (data: any) => void;
   onCalculate: (data: any) => void;
   loading: boolean;
 }
 
-const ScenarioForm: React.FC<ScenarioFormProps> = ({ onCalculate, loading }) => {
-  const [formData, setFormData] = useState({
-    purchase_price: 300000,
-    down_payment: 60000,
-    loan_amount: 240000,
-    interest_rate: 6.5,
-    loan_years: 30,
-    property_tax: 3000,
-    insurance: 1200,
-    maintenance: 1500,
-    vacancy_rate: 5,
-    rent: 2000,
-    appreciation_rate: 3,
-    stock_return_rate: 8,
-    years: 10
-  });
+const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange, onCalculate, loading }) => {
 
   const handleInputChange = (field: string, value: number) => {
-    setFormData(prev => ({
-      ...prev,
+    onFormDataChange({
+      ...formData,
       [field]: value
-    }));
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {

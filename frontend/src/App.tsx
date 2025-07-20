@@ -3,6 +3,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline, Container, Box, AppBar, Toolbar, Typography, Snackbar, Alert } from '@mui/material';
 import { Calculate as CalculateIcon } from '@mui/icons-material';
 import ScenarioForm from './components/ScenarioForm';
+import ScenarioSwitcher from './components/ScenarioSwitcher';
 import KPISummary from './components/KPISummary';
 import { calculateScenario, askLLM } from './api';
 
@@ -57,17 +58,48 @@ interface CalculationResult {
 }
 
 function App() {
+  const defaultScenario = {
+    purchase_price: 300000,
+    down_payment: 60000,
+    loan_amount: 240000,
+    interest_rate: 6.5,
+    loan_years: 30,
+    property_tax: 3000,
+    insurance: 1200,
+    maintenance: 1500,
+    vacancy_rate: 5,
+    rent: 2000,
+    appreciation_rate: 3,
+    stock_return_rate: 8,
+    years: 10,
+  };
+
+  const [scenarios, setScenarios] = useState([
+    { name: 'Base case', data: { ...defaultScenario } },
+    {
+      name: 'Stress test',
+      data: { ...defaultScenario, vacancy_rate: 10, appreciation_rate: 1 },
+    },
+  ]);
+  const [activeScenario, setActiveScenario] = useState(0);
+
   const [results, setResults] = useState<CalculationResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [llmResponse, setLlmResponse] = useState<string | null>(null);
-  const [currentFormData, setCurrentFormData] = useState<any>(null);
+  const currentFormData = scenarios[activeScenario].data;
+
+  const handleFormDataChange = (data: any) => {
+    setScenarios((prev) =>
+      prev.map((s, idx) => (idx === activeScenario ? { ...s, data } : s))
+    );
+  };
 
   const handleCalculate = async (formData: any) => {
     setLoading(true);
     setError(null);
     setLlmResponse(null);
-    setCurrentFormData(formData);
+    // Keep current scenario's data for KPI summary
     
     try {
       const result = await calculateScenario(formData);
@@ -116,7 +148,17 @@ function App() {
         >
           {/* Left Column - Investment Parameters */}
           <Box sx={{ order: { xs: 2, lg: 1 } }}>
-            <ScenarioForm onCalculate={handleCalculate} loading={loading} />
+            <ScenarioSwitcher
+              scenarios={scenarios}
+              activeIndex={activeScenario}
+              onChange={(idx) => setActiveScenario(idx)}
+            />
+            <ScenarioForm
+              formData={currentFormData}
+              onFormDataChange={handleFormDataChange}
+              onCalculate={handleCalculate}
+              loading={loading}
+            />
           </Box>
           
           {/* Right Column - Investment Analysis */}
