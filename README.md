@@ -17,6 +17,7 @@ backend/
   app/
     calc.py        # financial calculations (currently mock values)
     llm.py         # wrapper around OpenAI API
+    local_llm.py   # utilities for running a local model
     main.py        # FastAPI routes
     models.py      # placeholder for future data models
   requirements.txt
@@ -62,6 +63,22 @@ npm run dev
 ```
 
 This runs the backend and frontend concurrently for easy development.
+
+## Local LLM Chat Assistant
+
+The backend can run a lightweight CPU-based language model using
+`llama-cpp-python`. The first time you hit the `/local_llm` endpoint the model
+weights will be downloaded from Hugging Face into `backend/models/`. See
+`local_llm.py` for details. This allows experimenting with LLM responses without
+relying on OpenAI.
+
+Example request:
+
+```bash
+curl -X POST http://localhost:8000/local_llm \
+  -H "Content-Type: application/json" \
+  -d '{"scenario": {...}, "question": "Is this a good investment?"}'
+```
 
 ## Project Status
 

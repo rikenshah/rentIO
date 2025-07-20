@@ -272,8 +272,17 @@ uvicorn app.main:app --reload
   scikit-learn
   xgboost
   openai
+  huggingface-hub
+  llama-cpp-python
   requests
   ```
+
+### Local LLM Mode
+
+The backend includes `local_llm.py` which uses `llama-cpp-python` to run a
+quantized TinyLlama model on CPU. The first request to `/local_llm` downloads the
+weights from Hugging Face into `backend/models/`. This approach keeps the code
+modular so you can swap in larger models or GPU acceleration later.
 
 ---
 

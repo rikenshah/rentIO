@@ -5,6 +5,7 @@ import math
 import logging
 from .calc import calculate_metrics
 from .llm import get_llm_response
+from .local_llm import get_local_llm_response
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -77,4 +78,13 @@ def llm_response(req: LLMRequest):
     try:
         return {"response": get_llm_response(req.scenario, req.question)}
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e)) 
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/local_llm")
+def local_llm_response(req: LLMRequest):
+    """Respond to the user's question using the local LLM."""
+    try:
+        return {"response": get_local_llm_response(req.scenario, req.question)}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
