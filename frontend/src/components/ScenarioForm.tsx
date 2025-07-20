@@ -18,6 +18,8 @@ import {
   TrendingUp as TrendingUpIcon,
   Calculate as CalculateIcon
 } from '@mui/icons-material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import Tooltip from '@mui/material/Tooltip';
 
 interface ScenarioFormProps {
   formData: any;
@@ -42,13 +44,44 @@ const defaultFormData = {
   years: 10
 };
 
+const fieldTooltips: Record<string, string> = {
+  purchase_price: 'The total price you pay for the property.',
+  down_payment: 'The upfront cash payment you make (not financed).',
+  loan_amount: 'The amount you borrow from the lender.',
+  interest_rate: 'The annual interest rate on your mortgage.',
+  loan_years: 'The number of years for your mortgage loan.',
+  property_tax: 'Annual property tax paid to the local government.',
+  insurance: 'Annual property insurance cost.',
+  maintenance: 'Annual maintenance and repair costs.',
+  vacancy_rate: 'Percent of time the property is expected to be vacant.',
+  rent: 'Monthly rent you expect to collect.',
+  appreciation_rate: 'Expected annual property value increase (%).',
+  stock_return_rate: 'Expected annual return if you invested in stocks instead (%).',
+  years: 'Number of years you plan to hold the investment.'
+};
+
 const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange, onCalculate, loading }) => {
   const safeFormData = { ...defaultFormData, ...(formData || {}) };
 
-  const handleInputChange = (field: string, value: number) => {
+  // Helper to strip leading zeroes and ensure number
+  const normalizeNumber = (value: string | number) => {
+    if (typeof value === 'number') return value;
+    // Remove leading zeroes, allow empty string
+    const stripped = value.replace(/^0+(?=\d)/, '');
+    // If not a valid number, return empty string for display
+    return stripped === '' || isNaN(Number(stripped)) ? '' : Number(stripped);
+  };
+
+  const handleInputChange = (field: string, value: number | string) => {
+    // Always parse as number and strip leading zeroes
+    let cleanValue = value;
+    if (typeof value === 'string') {
+      cleanValue = normalizeNumber(value);
+      cleanValue = cleanValue === '' ? 0 : Number(cleanValue);
+    }
     onFormDataChange({
       ...safeFormData,
-      [field]: value
+      [field]: cleanValue
     });
   };
 
@@ -74,50 +107,85 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Purchase Price"
+                  label={
+                    <span>
+                      Purchase Price
+                      <Tooltip title={fieldTooltips.purchase_price} placement="top">
+                        <InfoOutlinedIcon fontSize="small" sx={{ ml: 0.5, verticalAlign: 'middle', color: 'action.active' }} />
+                      </Tooltip>
+                    </span>
+                  }
                   type="number"
-                  value={safeFormData.purchase_price}
-                  onChange={(e) => handleInputChange('purchase_price', Number(e.target.value))}
+                  value={normalizeNumber(safeFormData.purchase_price)}
+                  onChange={(e) => handleInputChange('purchase_price', e.target.value)}
                   InputProps={{ startAdornment: '$' }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Down Payment"
+                  label={
+                    <span>
+                      Down Payment
+                      <Tooltip title={fieldTooltips.down_payment} placement="top">
+                        <InfoOutlinedIcon fontSize="small" sx={{ ml: 0.5, verticalAlign: 'middle', color: 'action.active' }} />
+                      </Tooltip>
+                    </span>
+                  }
                   type="number"
-                  value={safeFormData.down_payment}
-                  onChange={(e) => handleInputChange('down_payment', Number(e.target.value))}
+                  value={normalizeNumber(safeFormData.down_payment)}
+                  onChange={(e) => handleInputChange('down_payment', e.target.value)}
                   InputProps={{ startAdornment: '$' }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Loan Amount"
+                  label={
+                    <span>
+                      Loan Amount
+                      <Tooltip title={fieldTooltips.loan_amount} placement="top">
+                        <InfoOutlinedIcon fontSize="small" sx={{ ml: 0.5, verticalAlign: 'middle', color: 'action.active' }} />
+                      </Tooltip>
+                    </span>
+                  }
                   type="number"
-                  value={safeFormData.loan_amount}
-                  onChange={(e) => handleInputChange('loan_amount', Number(e.target.value))}
+                  value={normalizeNumber(safeFormData.loan_amount)}
+                  onChange={(e) => handleInputChange('loan_amount', e.target.value)}
                   InputProps={{ startAdornment: '$' }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Interest Rate"
+                  label={
+                    <span>
+                      Interest Rate
+                      <Tooltip title={fieldTooltips.interest_rate} placement="top">
+                        <InfoOutlinedIcon fontSize="small" sx={{ ml: 0.5, verticalAlign: 'middle', color: 'action.active' }} />
+                      </Tooltip>
+                    </span>
+                  }
                   type="number"
-                  value={safeFormData.interest_rate}
-                  onChange={(e) => handleInputChange('interest_rate', Number(e.target.value))}
+                  value={normalizeNumber(safeFormData.interest_rate)}
+                  onChange={(e) => handleInputChange('interest_rate', e.target.value)}
                   InputProps={{ endAdornment: '%' }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Loan Years"
+                  label={
+                    <span>
+                      Loan Years
+                      <Tooltip title={fieldTooltips.loan_years} placement="top">
+                        <InfoOutlinedIcon fontSize="small" sx={{ ml: 0.5, verticalAlign: 'middle', color: 'action.active' }} />
+                      </Tooltip>
+                    </span>
+                  }
                   type="number"
-                  value={safeFormData.loan_years}
-                  onChange={(e) => handleInputChange('loan_years', Number(e.target.value))}
+                  value={normalizeNumber(safeFormData.loan_years)}
+                  onChange={(e) => handleInputChange('loan_years', e.target.value)}
                 />
               </Grid>
             </Grid>
@@ -134,40 +202,68 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Property Tax"
+                  label={
+                    <span>
+                      Property Tax
+                      <Tooltip title={fieldTooltips.property_tax} placement="top">
+                        <InfoOutlinedIcon fontSize="small" sx={{ ml: 0.5, verticalAlign: 'middle', color: 'action.active' }} />
+                      </Tooltip>
+                    </span>
+                  }
                   type="number"
-                  value={safeFormData.property_tax}
-                  onChange={(e) => handleInputChange('property_tax', Number(e.target.value))}
+                  value={normalizeNumber(safeFormData.property_tax)}
+                  onChange={(e) => handleInputChange('property_tax', e.target.value)}
                   InputProps={{ startAdornment: '$' }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Insurance"
+                  label={
+                    <span>
+                      Insurance
+                      <Tooltip title={fieldTooltips.insurance} placement="top">
+                        <InfoOutlinedIcon fontSize="small" sx={{ ml: 0.5, verticalAlign: 'middle', color: 'action.active' }} />
+                      </Tooltip>
+                    </span>
+                  }
                   type="number"
-                  value={safeFormData.insurance}
-                  onChange={(e) => handleInputChange('insurance', Number(e.target.value))}
+                  value={normalizeNumber(safeFormData.insurance)}
+                  onChange={(e) => handleInputChange('insurance', e.target.value)}
                   InputProps={{ startAdornment: '$' }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Maintenance"
+                  label={
+                    <span>
+                      Maintenance
+                      <Tooltip title={fieldTooltips.maintenance} placement="top">
+                        <InfoOutlinedIcon fontSize="small" sx={{ ml: 0.5, verticalAlign: 'middle', color: 'action.active' }} />
+                      </Tooltip>
+                    </span>
+                  }
                   type="number"
-                  value={safeFormData.maintenance}
-                  onChange={(e) => handleInputChange('maintenance', Number(e.target.value))}
+                  value={normalizeNumber(safeFormData.maintenance)}
+                  onChange={(e) => handleInputChange('maintenance', e.target.value)}
                   InputProps={{ startAdornment: '$' }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Vacancy Rate"
+                  label={
+                    <span>
+                      Vacancy Rate
+                      <Tooltip title={fieldTooltips.vacancy_rate} placement="top">
+                        <InfoOutlinedIcon fontSize="small" sx={{ ml: 0.5, verticalAlign: 'middle', color: 'action.active' }} />
+                      </Tooltip>
+                    </span>
+                  }
                   type="number"
-                  value={safeFormData.vacancy_rate}
-                  onChange={(e) => handleInputChange('vacancy_rate', Number(e.target.value))}
+                  value={normalizeNumber(safeFormData.vacancy_rate)}
+                  onChange={(e) => handleInputChange('vacancy_rate', e.target.value)}
                   InputProps={{ endAdornment: '%' }}
                 />
               </Grid>
@@ -185,40 +281,68 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Monthly Rent"
+                  label={
+                    <span>
+                      Monthly Rent
+                      <Tooltip title={fieldTooltips.rent} placement="top">
+                        <InfoOutlinedIcon fontSize="small" sx={{ ml: 0.5, verticalAlign: 'middle', color: 'action.active' }} />
+                      </Tooltip>
+                    </span>
+                  }
                   type="number"
-                  value={safeFormData.rent}
-                  onChange={(e) => handleInputChange('rent', Number(e.target.value))}
+                  value={normalizeNumber(safeFormData.rent)}
+                  onChange={(e) => handleInputChange('rent', e.target.value)}
                   InputProps={{ startAdornment: '$' }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Appreciation Rate"
+                  label={
+                    <span>
+                      Appreciation Rate
+                      <Tooltip title={fieldTooltips.appreciation_rate} placement="top">
+                        <InfoOutlinedIcon fontSize="small" sx={{ ml: 0.5, verticalAlign: 'middle', color: 'action.active' }} />
+                      </Tooltip>
+                    </span>
+                  }
                   type="number"
-                  value={safeFormData.appreciation_rate}
-                  onChange={(e) => handleInputChange('appreciation_rate', Number(e.target.value))}
+                  value={normalizeNumber(safeFormData.appreciation_rate)}
+                  onChange={(e) => handleInputChange('appreciation_rate', e.target.value)}
                   InputProps={{ endAdornment: '%' }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Stock Return Rate"
+                  label={
+                    <span>
+                      Stock Return Rate
+                      <Tooltip title={fieldTooltips.stock_return_rate} placement="top">
+                        <InfoOutlinedIcon fontSize="small" sx={{ ml: 0.5, verticalAlign: 'middle', color: 'action.active' }} />
+                      </Tooltip>
+                    </span>
+                  }
                   type="number"
-                  value={safeFormData.stock_return_rate}
-                  onChange={(e) => handleInputChange('stock_return_rate', Number(e.target.value))}
+                  value={normalizeNumber(safeFormData.stock_return_rate)}
+                  onChange={(e) => handleInputChange('stock_return_rate', e.target.value)}
                   InputProps={{ endAdornment: '%' }}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  label="Investment Years"
+                  label={
+                    <span>
+                      Investment Years
+                      <Tooltip title={fieldTooltips.years} placement="top">
+                        <InfoOutlinedIcon fontSize="small" sx={{ ml: 0.5, verticalAlign: 'middle', color: 'action.active' }} />
+                      </Tooltip>
+                    </span>
+                  }
                   type="number"
-                  value={safeFormData.years}
-                  onChange={(e) => handleInputChange('years', Number(e.target.value))}
+                  value={normalizeNumber(safeFormData.years)}
+                  onChange={(e) => handleInputChange('years', e.target.value)}
                 />
               </Grid>
             </Grid>
