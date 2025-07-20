@@ -4,6 +4,7 @@ import { CssBaseline, Container, Box, AppBar, Toolbar, Typography, Snackbar, Ale
 import { Calculate as CalculateIcon } from '@mui/icons-material';
 import ScenarioForm from './components/ScenarioForm';
 import KPISummary from './components/KPISummary';
+import LLMChat, { ChatMessage } from './components/LLMChat';
 import { calculateScenario, askLLM } from './api';
 
 const theme = createTheme({
@@ -61,6 +62,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [llmResponse, setLlmResponse] = useState<string | null>(null);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [currentFormData, setCurrentFormData] = useState<any>(null);
 
   const handleCalculate = async (formData: any) => {
@@ -76,10 +78,22 @@ function App() {
       // Get LLM recommendation
       const llmResult = await askLLM(formData, "Analyze this investment scenario and provide a brief recommendation.");
       setLlmResponse(llmResult);
+      setChatMessages([{ role: 'assistant', content: llmResult }]);
     } catch (err) {
       setError('Failed to calculate investment metrics. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleChatSend = async (message: string) => {
+    if (!currentFormData) return;
+    setChatMessages((prev) => [...prev, { role: 'user', content: message }]);
+    try {
+      const reply = await askLLM(currentFormData, message);
+      setChatMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
+    } catch (err) {
+      setChatMessages((prev) => [...prev, { role: 'assistant', content: 'Assistant unavailable.' }]);
     }
   };
 
@@ -122,6 +136,9 @@ function App() {
           {/* Right Column - Investment Analysis */}
           <Box sx={{ order: { xs: 1, lg: 2 } }}>
             <KPISummary results={results} llmResponse={llmResponse} formData={currentFormData} />
+            {results && (
+              <LLMChat messages={chatMessages} onSend={handleChatSend} />
+            )}
           </Box>
         </Box>
       </Container>

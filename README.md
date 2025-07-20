@@ -6,7 +6,8 @@ A monorepo for a React and FastAPI application that compares real estate investm
 
 - **Interactive calculators** for metrics such as Net Operating Income, Cap Rate, Cash Flow, Cash-on-Cash Return, Internal Rate of Return (IRR), and Net Present Value (NPV).
 - **Scenario comparisons** allowing users to adjust inputs like purchase price, mortgage terms, vacancy rate and more, then view both real estate and stock performance side by side.
-- **LLM integration** for answering "what‑if" questions about any scenario using OpenAI's API.
+- **LLM integration** for answering "what‑if" questions using a lightweight local model with optional OpenAI fallback.
+- **Chat assistant** lets you ask follow-up questions like "What if appreciation drops 2%?" and receive plain‑language advice.
 - **React frontend** with live updates and charting.
 - **FastAPI backend** providing calculation endpoints and optional machine‑learning forecasts.
 
@@ -16,7 +17,7 @@ A monorepo for a React and FastAPI application that compares real estate investm
 backend/
   app/
     calc.py        # financial calculations (currently mock values)
-    llm.py         # wrapper around OpenAI API
+    llm.py         # local LLM helper with optional OpenAI fallback
     main.py        # FastAPI routes
     models.py      # placeholder for future data models
   requirements.txt
@@ -42,6 +43,16 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload
+```
+
+The backend will use a small local LLM by default (`google/flan-t5-small`).
+To use a different model or the OpenAI API, set these environment variables:
+
+```bash
+# optional: override the local model
+export LOCAL_LLM_MODEL="google/flan-t5-small"
+# optional: use OpenAI instead of the local model
+export OPENAI_API_KEY=your-key
 ```
 
 ### Frontend
