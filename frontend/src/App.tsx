@@ -9,7 +9,7 @@ import { calculateScenario, askLLM } from './api';
 
 const theme = createTheme({
   palette: {
-    mode: 'light',
+    mode: 'dark',
     primary: {
       main: '#0052CC',
     },
@@ -17,7 +17,8 @@ const theme = createTheme({
       main: '#2EC4B6',
     },
     background: {
-      default: '#f8fbff',
+      default: '#121212',
+      paper: '#1e1e1e',
     },
   },
   typography: {

@@ -58,7 +58,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
   };
 
   return (
-    <Paper elevation={0} sx={{ p: 4, backgroundColor: '#fff' }}>
+    <Paper elevation={0} sx={{ p: 4, bgcolor: 'background.paper' }}>
       <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
         Investment Parameters
       </Typography>
