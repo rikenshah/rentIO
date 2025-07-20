@@ -5,6 +5,7 @@ import { Calculate as CalculateIcon } from '@mui/icons-material';
 import ScenarioForm from './components/ScenarioForm';
 import ScenarioSwitcher from './components/ScenarioSwitcher';
 import KPISummary from './components/KPISummary';
+import ChatAssistant from './components/ChatAssistant';
 import { calculateScenario, askLLM } from './api';
 
 const theme = createTheme({
@@ -164,6 +165,7 @@ function App() {
           {/* Right Column - Investment Analysis */}
           <Box sx={{ order: { xs: 1, lg: 2 } }}>
             <KPISummary results={results} llmResponse={llmResponse} formData={currentFormData} />
+            <ChatAssistant scenario={currentFormData} />
           </Box>
         </Box>
       </Container>

@@ -6,7 +6,7 @@ A monorepo for a React and FastAPI application that compares real estate investm
 
 - **Interactive calculators** for metrics such as Net Operating Income, Cap Rate, Cash Flow, Cash-on-Cash Return, Internal Rate of Return (IRR), and Net Present Value (NPV).
 - **Scenario comparisons** allowing users to adjust inputs like purchase price, mortgage terms, vacancy rate and more, then view both real estate and stock performance side by side.
-- **LLM integration** for answering "what‑if" questions about any scenario using OpenAI's API.
+- **LLM integration** for answering "what‑if" questions about any scenario using OpenAI's API or a local CPU model.
 - **React frontend** with live updates, time-series plots, and bar/pie charts for detailed comparisons.
 - **FastAPI backend** providing calculation endpoints and optional machine‑learning forecasts.
 
@@ -62,6 +62,20 @@ npm run dev
 ```
 
 This runs the backend and frontend concurrently for easy development.
+
+### Local Chat Assistant
+
+To run the built-in chat assistant without any external API keys you need a
+small `gguf` model compatible with [`llama-cpp-python`](https://github.com/abetlen/llama-cpp-python).
+Download a quantized model (for example from Hugging Face) and set its path:
+
+```bash
+export LOCAL_LLM_MODEL_PATH=/path/to/model.gguf
+pip install -r backend/requirements.txt
+```
+
+The `/chat` API endpoint will now generate answers locally using the CPU. Adjust
+`LLAMA_THREADS` if you want to control how many threads the model uses.
 
 ## Project Status
 

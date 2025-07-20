@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import logging
 from .calc import calculate_metrics
 from .llm import get_llm_response
+from .local_llm import get_chat_response
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -67,4 +68,15 @@ def llm_response(req: LLMRequest):
     try:
         return {"response": get_llm_response(req.scenario, req.question)}
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e)) 
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/chat")
+def chat_response(req: LLMRequest):
+    """Chat endpoint powered by a local CPU LLM."""
+    try:
+        response = get_chat_response(req.scenario.model_dump(), req.question)
+        return {"response": response}
+    except Exception as e:
+        logger.error("Error in chat endpoint: %s", e, exc_info=True)
+        raise HTTPException(status_code=400, detail=str(e))

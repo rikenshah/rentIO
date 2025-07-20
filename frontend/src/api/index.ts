@@ -26,9 +26,9 @@ export async function calculateScenario(data: any) {
 
 export async function askLLM(scenario: any, question: string) {
   try {
-    const res = await axios.post(`${API_URL}/llm`, { scenario, question });
+    const res = await axios.post(`${API_URL}/chat`, { scenario, question });
     return res.data.response;
   } catch (error) {
     return "I'm sorry, the AI assistant is not available right now. Please try again later.";
   }
-} 
+}
