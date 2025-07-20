@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, model_validator
+import math
 import logging
 from .calc import calculate_metrics
 from .llm import get_llm_response
@@ -21,19 +22,28 @@ app.add_middleware(
 )
 
 class ScenarioInput(BaseModel):
-    purchase_price: float
-    down_payment: float
-    loan_amount: float
-    interest_rate: float
-    loan_years: int
-    property_tax: float
-    insurance: float
-    maintenance: float
-    vacancy_rate: float
-    rent: float
-    appreciation_rate: float
-    stock_return_rate: float
-    years: int
+    purchase_price: float = Field(..., gt=0)
+    down_payment: float = Field(..., gt=0)
+    loan_amount: float = Field(..., ge=0)
+    interest_rate: float = Field(..., ge=0)
+    loan_years: int = Field(..., gt=0)
+    property_tax: float = Field(..., ge=0)
+    insurance: float = Field(..., ge=0)
+    maintenance: float = Field(..., ge=0)
+    vacancy_rate: float = Field(..., ge=0, le=100)
+    rent: float = Field(..., ge=0)
+    appreciation_rate: float = Field(..., ge=-100)
+    stock_return_rate: float = Field(..., ge=-100)
+    years: int = Field(..., gt=0)
+
+    @model_validator(mode="after")
+    def check_values(self):
+        if self.down_payment > self.purchase_price:
+            raise ValueError("down_payment cannot exceed purchase_price")
+        expected_loan = self.purchase_price - self.down_payment
+        if not math.isclose(self.loan_amount, expected_loan, rel_tol=1e-2):
+            raise ValueError("loan_amount must equal purchase_price - down_payment")
+        return self
 
 class LLMRequest(BaseModel):
     scenario: ScenarioInput

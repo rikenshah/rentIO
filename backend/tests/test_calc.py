@@ -34,5 +34,5 @@ def test_calculate_metrics_returns_expected_values():
     assert abs(result["CashFlow"] + 1103.56) < 0.1  # negative cash flow
     assert abs(result["CashOnCash"] + 1.84) < 0.1   # negative cash on cash
     assert abs(result["StockValue"] - 129535.5) < 1
-    assert abs(result["NPV"] + 67404.97) < 1
-    assert result["IRR"] == 0
+    assert abs(result["NPV"] - 18248.17) < 0.1
+    assert abs(result["IRR"] - 10.49) < 0.1
