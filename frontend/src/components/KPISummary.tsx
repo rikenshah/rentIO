@@ -347,7 +347,7 @@ const KPISummary: React.FC<KPISummaryProps> = ({ results, llmResponse, formData 
 
   if (!results) {
     return (
-      <Paper elevation={3} sx={{ p: 3, height: 'fit-content' }}>
+      <Paper elevation={0} sx={{ p: 4, backgroundColor: '#fff' }}>
         <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
           Investment Analysis
         </Typography>
@@ -427,7 +427,7 @@ const KPISummary: React.FC<KPISummaryProps> = ({ results, llmResponse, formData 
   ];
 
   return (
-    <Paper elevation={3} sx={{ p: 3, height: 'fit-content' }}>
+    <Paper elevation={0} sx={{ p: 4, backgroundColor: '#fff' }}>
       <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
         Investment Analysis
       </Typography>
