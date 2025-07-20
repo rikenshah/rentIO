@@ -54,7 +54,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ onCalculate, loading }) => 
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 3, height: 'fit-content' }}>
+    <Paper elevation={0} sx={{ p: 4, backgroundColor: '#fff' }}>
       <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
         Investment Parameters
       </Typography>
@@ -233,7 +233,8 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ onCalculate, loading }) => 
               py: 1.5,
               fontSize: '1.1rem',
               fontWeight: 600,
-              minWidth: 200
+              minWidth: 200,
+              background: 'linear-gradient(90deg, #0052CC 0%, #2EC4B6 100%)'
             }}
           >
             {loading ? 'Calculating...' : 'Calculate Investment'}

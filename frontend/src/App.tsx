@@ -8,11 +8,39 @@ import { calculateScenario, askLLM } from './api';
 
 const theme = createTheme({
   palette: {
+    mode: 'light',
     primary: {
-      main: '#1976d2',
+      main: '#0052CC',
     },
     secondary: {
-      main: '#dc004e',
+      main: '#2EC4B6',
+    },
+    background: {
+      default: '#f8fbff',
+    },
+  },
+  typography: {
+    fontFamily: `'Poppins', sans-serif`,
+    h6: {
+      fontWeight: 600,
+    },
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+        },
+      },
     },
   },
 });
@@ -23,7 +51,6 @@ interface CalculationResult {
   CapRate: number;
   CashFlow: number;
   CashOnCash: number;
-  DSCR: number;
   StockValue: number;
   NPV: number;
   IRR: number;
@@ -59,7 +86,15 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppBar position="static" elevation={0} sx={{ backgroundColor: 'white', color: 'text.primary' }}>
+      <AppBar
+        position="static"
+        elevation={0}
+        sx={{
+          background: 'linear-gradient(90deg, #0052CC 0%, #2EC4B6 100%)',
+          color: '#fff',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        }}
+      >
         <Toolbar>
           <CalculateIcon sx={{ mr: 2 }} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 600 }}>
