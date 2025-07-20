@@ -8,7 +8,7 @@ def calculate_metrics(scenario: Mapping[str, Any]) -> dict:
     """Calculate investment metrics from the provided scenario."""
     try:
         # Convert Pydantic model to dictionary
-        p = scenario.dict() if hasattr(scenario, 'dict') else scenario
+        p = scenario.model_dump() if hasattr(scenario, 'model_dump') else scenario
         
         # Mortgage calculation
         loan_amount = float(p['loan_amount'])

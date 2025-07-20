@@ -52,7 +52,7 @@ def calculate(scenario: ScenarioInput):
     try:
         logger.info(f"Received scenario: {scenario}")
         # Convert to dict for debugging
-        scenario_dict = scenario.dict()
+        scenario_dict = scenario.model_dump()
         logger.info(f"Scenario dict: {scenario_dict}")
         
         result = calculate_metrics(scenario)

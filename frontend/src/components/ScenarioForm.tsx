@@ -26,18 +26,35 @@ interface ScenarioFormProps {
   loading: boolean;
 }
 
+const defaultFormData = {
+  purchase_price: 300000,
+  down_payment: 60000,
+  loan_amount: 240000,
+  interest_rate: 6.5,
+  loan_years: 30,
+  property_tax: 3000,
+  insurance: 1200,
+  maintenance: 1500,
+  vacancy_rate: 5,
+  rent: 2000,
+  appreciation_rate: 3,
+  stock_return_rate: 8,
+  years: 10
+};
+
 const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange, onCalculate, loading }) => {
+  const safeFormData = { ...defaultFormData, ...(formData || {}) };
 
   const handleInputChange = (field: string, value: number) => {
     onFormDataChange({
-      ...formData,
+      ...safeFormData,
       [field]: value
     });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onCalculate(formData);
+    onCalculate(safeFormData);
   };
 
   return (
@@ -59,7 +76,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
                   fullWidth
                   label="Purchase Price"
                   type="number"
-                  value={formData.purchase_price}
+                  value={safeFormData.purchase_price}
                   onChange={(e) => handleInputChange('purchase_price', Number(e.target.value))}
                   InputProps={{ startAdornment: '$' }}
                 />
@@ -69,7 +86,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
                   fullWidth
                   label="Down Payment"
                   type="number"
-                  value={formData.down_payment}
+                  value={safeFormData.down_payment}
                   onChange={(e) => handleInputChange('down_payment', Number(e.target.value))}
                   InputProps={{ startAdornment: '$' }}
                 />
@@ -79,7 +96,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
                   fullWidth
                   label="Loan Amount"
                   type="number"
-                  value={formData.loan_amount}
+                  value={safeFormData.loan_amount}
                   onChange={(e) => handleInputChange('loan_amount', Number(e.target.value))}
                   InputProps={{ startAdornment: '$' }}
                 />
@@ -89,7 +106,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
                   fullWidth
                   label="Interest Rate"
                   type="number"
-                  value={formData.interest_rate}
+                  value={safeFormData.interest_rate}
                   onChange={(e) => handleInputChange('interest_rate', Number(e.target.value))}
                   InputProps={{ endAdornment: '%' }}
                 />
@@ -99,7 +116,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
                   fullWidth
                   label="Loan Years"
                   type="number"
-                  value={formData.loan_years}
+                  value={safeFormData.loan_years}
                   onChange={(e) => handleInputChange('loan_years', Number(e.target.value))}
                 />
               </Grid>
@@ -119,7 +136,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
                   fullWidth
                   label="Property Tax"
                   type="number"
-                  value={formData.property_tax}
+                  value={safeFormData.property_tax}
                   onChange={(e) => handleInputChange('property_tax', Number(e.target.value))}
                   InputProps={{ startAdornment: '$' }}
                 />
@@ -129,7 +146,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
                   fullWidth
                   label="Insurance"
                   type="number"
-                  value={formData.insurance}
+                  value={safeFormData.insurance}
                   onChange={(e) => handleInputChange('insurance', Number(e.target.value))}
                   InputProps={{ startAdornment: '$' }}
                 />
@@ -139,7 +156,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
                   fullWidth
                   label="Maintenance"
                   type="number"
-                  value={formData.maintenance}
+                  value={safeFormData.maintenance}
                   onChange={(e) => handleInputChange('maintenance', Number(e.target.value))}
                   InputProps={{ startAdornment: '$' }}
                 />
@@ -149,7 +166,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
                   fullWidth
                   label="Vacancy Rate"
                   type="number"
-                  value={formData.vacancy_rate}
+                  value={safeFormData.vacancy_rate}
                   onChange={(e) => handleInputChange('vacancy_rate', Number(e.target.value))}
                   InputProps={{ endAdornment: '%' }}
                 />
@@ -170,7 +187,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
                   fullWidth
                   label="Monthly Rent"
                   type="number"
-                  value={formData.rent}
+                  value={safeFormData.rent}
                   onChange={(e) => handleInputChange('rent', Number(e.target.value))}
                   InputProps={{ startAdornment: '$' }}
                 />
@@ -180,7 +197,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
                   fullWidth
                   label="Appreciation Rate"
                   type="number"
-                  value={formData.appreciation_rate}
+                  value={safeFormData.appreciation_rate}
                   onChange={(e) => handleInputChange('appreciation_rate', Number(e.target.value))}
                   InputProps={{ endAdornment: '%' }}
                 />
@@ -190,7 +207,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
                   fullWidth
                   label="Stock Return Rate"
                   type="number"
-                  value={formData.stock_return_rate}
+                  value={safeFormData.stock_return_rate}
                   onChange={(e) => handleInputChange('stock_return_rate', Number(e.target.value))}
                   InputProps={{ endAdornment: '%' }}
                 />
@@ -200,7 +217,7 @@ const ScenarioForm: React.FC<ScenarioFormProps> = ({ formData, onFormDataChange,
                   fullWidth
                   label="Investment Years"
                   type="number"
-                  value={formData.years}
+                  value={safeFormData.years}
                   onChange={(e) => handleInputChange('years', Number(e.target.value))}
                 />
               </Grid>
