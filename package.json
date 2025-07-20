@@ -1,0 +1,17 @@
+{
+  "name": "rentio-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"cd backend && source venv/bin/activate && uvicorn app.main:app --reload\" \"cd frontend && npm run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "@chakra-ui/form-control": "^2.2.0",
+    "@chakra-ui/number-input": "^2.1.2",
+    "@chakra-ui/stat": "^2.1.1",
+    "@chakra-ui/toast": "^7.0.2"
+  }
+}

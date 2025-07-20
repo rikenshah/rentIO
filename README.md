@@ -1,2 +1,4 @@
 # rentIO
-Rental Property Investment Analysis 
+
+Monorepo for Real Estate vs. Stock Investment Tool
+
