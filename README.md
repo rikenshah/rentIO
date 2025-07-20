@@ -7,7 +7,7 @@ A monorepo for a React and FastAPI application that compares real estate investm
 - **Interactive calculators** for metrics such as Net Operating Income, Cap Rate, Cash Flow, Cash-on-Cash Return, Internal Rate of Return (IRR), and Net Present Value (NPV).
 - **Scenario comparisons** allowing users to adjust inputs like purchase price, mortgage terms, vacancy rate and more, then view both real estate and stock performance side by side.
 - **LLM integration** for answering "what‑if" questions about any scenario using OpenAI's API.
-- **React frontend** with live updates and charting.
+- **React frontend** with live updates, time-series plots, and bar/pie charts for detailed comparisons.
 - **FastAPI backend** providing calculation endpoints and optional machine‑learning forecasts.
 
 ## Repository Structure
