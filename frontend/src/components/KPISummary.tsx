@@ -304,6 +304,37 @@ const KPISummary: React.FC<KPISummaryProps> = ({ results, llmResponse, formData 
         };
       }
     },
+    DSCR: {
+      title: 'Debt Service Coverage Ratio',
+      definition: 'Measures the property\'s ability to cover its debt obligations from operating income.',
+      calculation: [
+        'Calculate Net Operating Income (NOI)',
+        'Calculate Annual Debt Service: Monthly Payment × 12',
+        'Divide NOI by Annual Debt Service',
+        'DSCR = NOI ÷ Debt Service'
+      ],
+      insights: [
+        'DSCR above 1.25 is typically preferred by lenders',
+        'Improve DSCR by increasing rent or reducing expenses',
+        'A DSCR below 1 indicates negative cash flow after debt payments',
+        'Monitor DSCR annually to ensure loan compliance'
+      ],
+      icon: <AccountBalanceIcon />,
+      getActualCalculation: (results, formData) => {
+        const annualDebt = results.monthly_payment * 12;
+        const dscr = results.NOI / annualDebt;
+
+        return {
+          steps: [
+            `NOI = ${formatCurrency(results.NOI)}`,
+            `Annual Debt Service = ${formatCurrency(results.monthly_payment)} × 12 = ${formatCurrency(annualDebt)}`,
+            `DSCR = ${formatCurrency(results.NOI)} ÷ ${formatCurrency(annualDebt)}`,
+            `DSCR = ${dscr.toFixed(2)}`
+          ],
+          finalValue: dscr.toFixed(2)
+        };
+      }
+    },
     StockValue: {
       title: 'Stock Investment Value',
       definition: 'The projected value of investing the same amount in the stock market over the same time period.',
@@ -371,6 +402,9 @@ const KPISummary: React.FC<KPISummaryProps> = ({ results, llmResponse, formData 
     if (type === 'irr') {
       return value >= 8 ? 'success' : value >= 6 ? 'warning' : 'error';
     }
+    if (type === 'dscr') {
+      return value >= 1.25 ? 'success' : value >= 1 ? 'warning' : 'error';
+    }
     return 'default';
   };
 
@@ -409,6 +443,13 @@ const KPISummary: React.FC<KPISummaryProps> = ({ results, llmResponse, formData 
       value: `${results.CashOnCash.toFixed(1)}%`,
       icon: <PercentIcon />,
       color: 'default' as const
+    },
+    {
+      key: 'DSCR',
+      title: 'DSCR',
+      value: results.DSCR.toFixed(2),
+      icon: <AccountBalanceIcon />,
+      color: getChipColor(results.DSCR, 'dscr') as any
     },
     {
       key: 'NPV',

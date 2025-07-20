@@ -9,6 +9,7 @@ const mockCalculation = (data: any) => ({
   CapRate: 6.00,
   CashFlow: 7200.00,
   CashOnCash: 12.00,
+  DSCR: 1.20,
   StockValue: 129435.00,
   NPV: 45000.00,
   IRR: 8.50,

@@ -23,6 +23,7 @@ interface CalculationResult {
   CapRate: number;
   CashFlow: number;
   CashOnCash: number;
+  DSCR: number;
   StockValue: number;
   NPV: number;
   IRR: number;
