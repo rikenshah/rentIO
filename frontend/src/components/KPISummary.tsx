@@ -41,6 +41,7 @@ import {
   Calculate as CalculateIcon,
   School as SchoolIcon
 } from '@mui/icons-material';
+import InvestmentCharts from './InvestmentCharts';
 
 interface KPISummaryProps {
   results: any;
@@ -486,10 +487,10 @@ const KPISummary: React.FC<KPISummaryProps> = ({ results, llmResponse, formData 
         Stock Market Comparison
       </Typography>
 
-      <Card 
-        variant="outlined" 
-        sx={{ 
-          mb: 3, 
+      <Card
+        variant="outlined"
+        sx={{
+          mb: 3,
           cursor: 'pointer',
           transition: 'all 0.2s ease-in-out',
           '&:hover': {
@@ -513,6 +514,8 @@ const KPISummary: React.FC<KPISummaryProps> = ({ results, llmResponse, formData 
           <Chip label="Stock Investment" color="primary" size="small" />
         </CardContent>
       </Card>
+
+      <InvestmentCharts results={results} formData={formData} />
 
       {/* LLM Recommendation */}
       {llmResponse && (

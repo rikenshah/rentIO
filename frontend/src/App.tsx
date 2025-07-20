@@ -3,6 +3,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline, Container, Box, AppBar, Toolbar, Typography, Snackbar, Alert } from '@mui/material';
 import { Calculate as CalculateIcon } from '@mui/icons-material';
 import ScenarioForm from './components/ScenarioForm';
+import ScenarioSwitcher from './components/ScenarioSwitcher';
 import KPISummary from './components/KPISummary';
 import LLMChat, { ChatMessage } from './components/LLMChat';
 import { calculateScenario, askLLM } from './api';
@@ -58,6 +59,31 @@ interface CalculationResult {
 }
 
 function App() {
+  const defaultScenario = {
+    purchase_price: 300000,
+    down_payment: 60000,
+    loan_amount: 240000,
+    interest_rate: 6.5,
+    loan_years: 30,
+    property_tax: 3000,
+    insurance: 1200,
+    maintenance: 1500,
+    vacancy_rate: 5,
+    rent: 2000,
+    appreciation_rate: 3,
+    stock_return_rate: 8,
+    years: 10,
+  };
+
+  const [scenarios, setScenarios] = useState([
+    { name: 'Base case', data: { ...defaultScenario } },
+    {
+      name: 'Stress test',
+      data: { ...defaultScenario, vacancy_rate: 10, appreciation_rate: 1 },
+    },
+  ]);
+  const [activeScenario, setActiveScenario] = useState(0);
+
   const [results, setResults] = useState<CalculationResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -65,18 +91,26 @@ function App() {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [currentFormData, setCurrentFormData] = useState<any>(null);
 
-  const handleCalculate = async (formData: any) => {
+  const currentScenarioData = scenarios[activeScenario].data;
+
+  const handleFormDataChange = (data: any) => {
+    setScenarios((prev) =>
+      prev.map((s, idx) => (idx === activeScenario ? { ...s, data } : s))
+    );
+  };
+
+  const handleCalculate = async (data: any) => {
     setLoading(true);
     setError(null);
     setLlmResponse(null);
-    setCurrentFormData(formData);
+    setCurrentFormData(data);
     
     try {
-      const result = await calculateScenario(formData);
+      const result = await calculateScenario(data);
       setResults(result);
       
       // Get LLM recommendation
-      const llmResult = await askLLM(formData, "Analyze this investment scenario and provide a brief recommendation.");
+      const llmResult = await askLLM(data, "Analyze this investment scenario and provide a brief recommendation.");
       setLlmResponse(llmResult);
       setChatMessages([{ role: 'assistant', content: llmResult }]);
     } catch (err) {
@@ -130,7 +164,17 @@ function App() {
         >
           {/* Left Column - Investment Parameters */}
           <Box sx={{ order: { xs: 2, lg: 1 } }}>
-            <ScenarioForm onCalculate={handleCalculate} loading={loading} />
+            <ScenarioSwitcher
+              scenarios={scenarios}
+              activeIndex={activeScenario}
+              onChange={(idx) => setActiveScenario(idx)}
+            />
+            <ScenarioForm
+              formData={currentScenarioData}
+              onFormDataChange={handleFormDataChange}
+              onCalculate={handleCalculate}
+              loading={loading}
+            />
           </Box>
           
           {/* Right Column - Investment Analysis */}

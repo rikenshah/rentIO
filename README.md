@@ -8,7 +8,7 @@ A monorepo for a React and FastAPI application that compares real estate investm
 - **Scenario comparisons** allowing users to adjust inputs like purchase price, mortgage terms, vacancy rate and more, then view both real estate and stock performance side by side.
 - **LLM integration** for answering "what‑if" questions using a lightweight local model with optional OpenAI fallback.
 - **Chat assistant** lets you ask follow-up questions like "What if appreciation drops 2%?" and receive plain‑language advice.
-- **React frontend** with live updates and charting.
+- **React frontend** with live updates, time-series plots and bar/pie charts for detailed comparisons.
 - **FastAPI backend** providing calculation endpoints and optional machine‑learning forecasts.
 
 ## Repository Structure
